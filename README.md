@@ -1,0 +1,2 @@
+galleria-slider
+===============
