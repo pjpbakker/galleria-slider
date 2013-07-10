@@ -67,11 +67,16 @@ function get_all_images() {
 	return $widget_content;
 }
 
-function get_tagged_images() {
+function get_tagged_images($atts) {
 	
+	extract(shortcode_atts(
+		array(
+			'tag' => 'emtpy_tag',
+		), $atts
+	));
 	global $wpdb;
 	
-	$query ="SELECT * FROM wp_posts, wp_term_relationships, wp_terms where post_type = 'attachment' AND ID = object_id AND term_taxonomy_id = term_id AND name = 'plaatjes'";
+	$query ="SELECT * FROM wp_posts, wp_term_relationships, wp_terms where post_type = 'attachment' AND ID = object_id AND term_taxonomy_id = term_id AND name = '" . $tag . "'";
 	$results = $wpdb->get_results($query);
 	
 	$widget_content = '<div class="galleria">';

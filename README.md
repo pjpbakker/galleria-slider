@@ -10,3 +10,4 @@ Both plugins store tags as taxonomy terms in the same tables, but using differen
 
 * [Writing custom queries in Wordpress](http://wp.tutsplus.com/tutorials/creative-coding/writing-custom-queries-in-wordpress/)
 * [Class reference: wpdb](http://codex.wordpress.org/Class_Reference/wpdb)
+* [Shortcode API](http://codex.wordpress.org/Shortcode_API)
