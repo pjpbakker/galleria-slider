@@ -18,3 +18,7 @@
 	background-image: url(../images/toggleplay.png);
 	background-position: 0 0;
 }
+galleria-info-text {
+    background: url("../images/ad-gallery/opa75.png") repeat scroll 0 0 transparent !important;
+    padding: 12px;
+}

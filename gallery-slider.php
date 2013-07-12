@@ -25,8 +25,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 function add_stylesheet() {
-	wp_register_style("play_style", plugins_url( '/css/style.css' , __FILE__ ), null, "1.0.0");
-	wp_enqueue_style("play_style");
 }
 
 add_action('wp_head', 'add_stylesheet');
@@ -50,18 +48,28 @@ function get_tagged_images($attrs) {
 	    	setup_postdata($attachment);
         $url = get_attachment_link($attachment->ID);      
         $img = wp_get_attachment_url($attachment->ID);
+				$caption = $attachment->post_excerpt;
         $title = get_the_title($attachment->post_parent);//extraigo titulo
-        $widget_content .= '<a href="'.$img.'"><img title="'.$title.'" src="'.$img.'"></a>';
+        $widget_content .= '<a href="'.$img.'"><img alt="'.$caption.'" src="'.$img.'"></a>';
 	    }   
 	}
-  $widget_content .= "</div>";
+  $widget_content .= "</div>\n";
+	$galleria_data = array(
+		"interval" => $interval, 
+	);
 	
+	$widget_content .= add_galleria_initializer($galleria_data);
 	return $widget_content;
 }
 
 add_shortcode( 'galleria', 'get_tagged_images' );
 
 function load_galleria_scripts() {
+	wp_register_style("play_style", plugins_url( '/css/style.css' , __FILE__ ), null, "1.0.3");
+	wp_register_style("galleria_style", plugins_url( '/css/jquery.ad-gallery.css' , __FILE__ ), null, "1.0.3");
+	wp_enqueue_style("play_style");
+	wp_enqueue_style("galleria_style");
+	
 	wp_enqueue_script(
 		'galleria-1.2.9.min',
 		plugins_url( '/js/galleria/galleria-1.2.9.min.js' , __FILE__ ),
@@ -71,9 +79,9 @@ function load_galleria_scripts() {
 
 add_action( 'wp_enqueue_scripts', 'load_galleria_scripts' );
 
-function add_galleria_initializer($content) {
+function add_galleria_initializer($data) {
 	$classic_url = plugins_url( '/css/galleria/themes/classic/galleria.classic.min.js' , __FILE__ );
-	$interval = 2000;
+	$interval = $data['interval'];
 	$galleria_js = <<<EOD
 	<script>
     Galleria.loadTheme('$classic_url');
@@ -104,9 +112,9 @@ function add_galleria_initializer($content) {
     });
 </script>
 EOD;
-	return $content . "\n" . $galleria_js;
+	return $galleria_js;
 }
 
-add_filter('the_content', 'add_galleria_initializer');
+// add_filter('the_content', 'add_galleria_initializer');
 
 ?>

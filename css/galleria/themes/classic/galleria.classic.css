@@ -69,7 +69,7 @@
     position: absolute;
 }
 .galleria-info-text {
-    background-color: #000;
+	background: url("opa75.png") repeat scroll 0 0 transparent;
     padding: 12px;
     display: none;
     /* IE7 */ zoom:1;
@@ -77,13 +77,13 @@
 .galleria-info-title {
     font: bold 12px/1.1 Verdana,Tahoma,"DejaVu Sans",sans-serif;
     margin: 0;
-    color: #fff;
+    color: #000;
     margin-bottom: 7px;
 }
 .galleria-info-description {
     font: 12px/1.4 Verdana,Tahoma,"DejaVu Sans",sans-serif;
     margin: 0;
-    color: #bbb;
+    color: #000;
 }
 .galleria-info-close {
     width: 9px;
