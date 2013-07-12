@@ -35,11 +35,16 @@ function get_tagged_images($attrs) {
 		array(
 			'tag' => 'emtpy_tag',
 			'interval' => 5000,
+			'sortby' => 'id',
 		), $attrs
 	));
 	global $wpdb;
 	
-	$query ="SELECT * FROM wp_posts, wp_term_relationships, wp_terms where post_type = 'attachment' AND ID = object_id AND term_taxonomy_id = term_id AND name = '" . $tag . "'";
+	$orderby = " order by ID";
+  if ($sortby == "post_name") {
+		$orderby = " order by post_name";
+  }
+	$query ="SELECT * FROM wp_posts, wp_term_relationships, wp_terms where post_type = 'attachment' AND ID = object_id AND term_taxonomy_id = term_id AND name = '" . $tag . "'" . $orderby;
 	$results = $wpdb->get_results($query);
 	
 	$widget_content = '<div class="galleria">';
