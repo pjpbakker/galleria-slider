@@ -40,13 +40,13 @@ function get_tagged_images($attrs) {
 	));
 	global $wpdb;
 	
-	$orderby = " order by ID";
+	$orderby_clause = " order by p.ID";
   if ($sortby == "post_name") {
-		$orderby = " order by post_name";
+		$orderby_clause = " order by p.post_name";
   }
-	$query ="SELECT * FROM wp_posts, wp_term_relationships, wp_terms where post_type = 'attachment' AND ID = object_id AND term_taxonomy_id = term_id AND name = '" . $tag . "'" . $orderby;
+	$query ="SELECT * FROM wp_posts as p, wp_term_relationships as tr, wp_terms as t where p.post_type = 'attachment' AND p.ID = tr.object_id AND tr.term_taxonomy_id = t.term_id AND t.name = '" . $tag . "'" . $orderby_clause;
 	$results = $wpdb->get_results($query);
-	
+
 	$widget_content = '<div class="galleria">';
 	if ($results) {
 	    foreach ($results as $attachment) {
@@ -55,7 +55,7 @@ function get_tagged_images($attrs) {
         $img = wp_get_attachment_url($attachment->ID);
 				$caption = $attachment->post_excerpt;
         $title = get_the_title($attachment->post_parent);//extraigo titulo
-        $widget_content .= '<a href="'.$img.'"><img alt="'.$caption.'" src="'.$img.'"></a>';
+        $widget_content .= '<a href="'.$img.'">'.wp_get_attachment_image( $attachment->ID, 'thumbnail' ).'</a>';
 	    }   
 	}
   $widget_content .= "</div>\n";
@@ -68,6 +68,10 @@ function get_tagged_images($attrs) {
 }
 
 add_shortcode( 'galleria', 'get_tagged_images' );
+
+function 	log_message($message) {
+	error_log(print_r($message, true));
+}
 
 function load_galleria_scripts() {
 	wp_register_style("play_style", plugins_url( '/css/style.css' , __FILE__ ), null, "1.0.3");
