@@ -51,9 +51,12 @@ function get_tagged_images($attrs) {
 	    	setup_postdata($attachment);
         $url = get_attachment_link($attachment->ID);      
         $img = wp_get_attachment_url($attachment->ID);
-				$caption = $attachment->post_excerpt;
-        $title = get_the_title($attachment->post_parent);//extraigo titulo
-        $widget_content .= '<a href="'.$img.'">'.wp_get_attachment_image( $attachment->ID, 'thumbnail' ).'</a>';
+      	$default_attr = array(
+					'alt'   => trim(strip_tags( get_post_meta($attachment->ID, '_wp_attachment_image_alt', true) )),
+					'title' => $attachment->post_excerpt,
+				);
+        
+        $widget_content .= '<a href="'.$img.'">'.wp_get_attachment_image($attachment->ID, 'thumbnail', false, $default_attr).'</a>';
 	    }   
 	}
   $widget_content .= "</div>\n";
