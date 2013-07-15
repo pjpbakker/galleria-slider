@@ -18,7 +18,15 @@
 	background-image: url(../images/toggleplay.png);
 	background-position: 0 0;
 }
-galleria-info-text {
-    background: url("../images/opa75.png") repeat scroll 0 0 transparent !important;
+.galleria-container .galleria-info-text {
+    background: url("../images/opa75.png") repeat scroll 0 0 transparent;
     padding: 12px;
+}
+.galleria-container .galleria-info-title {
+	font: bold 12px/1.1 Verdana,Tahoma,"DejaVu Sans",sans-serif;
+	color: #000;
+}
+.galleria-container .galleria-info-description {
+	font: 12px/1.4 Verdana,Tahoma,"DejaVu Sans",sans-serif;
+	color: #000;
 }
