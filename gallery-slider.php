@@ -24,11 +24,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-function add_stylesheet() {
-}
-
-add_action('wp_head', 'add_stylesheet');
-
 function get_tagged_images($attrs) {
 	
 	extract(shortcode_atts(
@@ -36,12 +31,15 @@ function get_tagged_images($attrs) {
 			'tag' => 'emtpy_tag',
 			'interval' => 5000,
 			'sortby' => 'id',
+			'show_info' => 'true',
+			'show_desc' => 'true',
+			'theme' => 'classic',
 		), $attrs
 	));
 	global $wpdb;
 	
 	$orderby_clause = " order by p.ID";
-  if ($sortby == "post_name") {
+  if ($sortby == "name") {
 		$orderby_clause = " order by p.post_name";
   }
 	$query ="SELECT * FROM wp_posts as p, wp_term_relationships as tr, wp_terms as t where p.post_type = 'attachment' AND p.ID = tr.object_id AND tr.term_taxonomy_id = t.term_id AND t.name = '" . $tag . "'" . $orderby_clause;
@@ -61,6 +59,9 @@ function get_tagged_images($attrs) {
   $widget_content .= "</div>\n";
 	$galleria_data = array(
 		"interval" => $interval, 
+		"show_info" => $show_info,
+		"show_desc" => $show_desc,
+		"theme" => $theme,
 	);
 	
 	$widget_content .= add_galleria_initializer($galleria_data);
@@ -87,14 +88,20 @@ function load_galleria_scripts() {
 add_action( 'wp_enqueue_scripts', 'load_galleria_scripts' );
 
 function add_galleria_initializer($data) {
-	$classic_url = plugins_url( '/css/galleria/themes/classic/galleria.classic.min.js' , __FILE__ );
+	$theme = $data['theme'];
+	$theme_url = plugins_url( "/css/galleria/themes/$theme/galleria.$theme.min.js" , __FILE__ );
 	$interval = $data['interval'];
+	$show_info = $data['show_info'];
+	$description_activate = '';
+	if (parseBool($data['show_desc'])) {
+		$description_activate = 'jQuery(".galleria-info-link").click();';
+	}
 	$galleria_js = <<<EOD
 	<script>
-    Galleria.loadTheme('$classic_url');
+    Galleria.loadTheme('$theme_url');
     Galleria.run('.galleria', {
        autoplay: $interval,
-       showInfo: true,
+       showInfo: $show_info,
        height: 500,
        transition: "fade",
        transitionSpeed: 400,
@@ -115,13 +122,19 @@ function add_galleria_initializer($data) {
     	});
     	jQuery(".galleria-info").after('<div id="togglePlay">&nbsp;</div>');
     	jQuery("#togglePlay").attr("class", "playing");
-    	jQuery(".galleria-info-link").click();
+    	$description_activate
     });
 </script>
 EOD;
 	return $galleria_js;
 }
 
-// add_filter('the_content', 'add_galleria_initializer');
+function parseBool($value) {
+   if ($value && strtolower($value) !== "false") {
+      return true;
+   } else {
+      return false;
+   }
+}
 
 ?>
