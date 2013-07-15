@@ -75,9 +75,7 @@ function 	log_message($message) {
 
 function load_galleria_scripts() {
 	wp_register_style("play_style", plugins_url( '/css/style.css' , __FILE__ ), null, "1.0.3");
-	wp_register_style("galleria_style", plugins_url( '/css/jquery.ad-gallery.css' , __FILE__ ), null, "1.0.3");
 	wp_enqueue_style("play_style");
-	wp_enqueue_style("galleria_style");
 	
 	wp_enqueue_script(
 		'galleria-1.2.9.min',
