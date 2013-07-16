@@ -97,37 +97,38 @@ function add_galleria_initializer($data) {
 	$show_info = $data['show_info'];
 	$description_activate = '';
 	if (parseBool($data['show_desc'])) {
-		$description_activate = 'jQuery(".galleria-info-link").click();';
+		$description_activate = '$(".galleria-info-link").click();';
 	}
 	$escaped_theme_url = str_replace(" ", "%20", $theme_url);
 	$galleria_js = <<<EOD
 	<script>
-    Galleria.loadTheme('$escaped_theme_url');
-    Galleria.run('.galleria', {
-       autoplay: $interval,
-       showInfo: $show_info,
-       height: 500,
-       transition: "fade",
-       transitionSpeed: 400,
-       lightbox: true,
-       extend: function() {
-            var gallery = this;
-            jQuery('#togglePlay').click(function() {
-                gallery.playToggle();
-            });
-       },
-    });
-    Galleria.ready(function() {
-    	this.bind("play", function(e) {
-    		jQuery("#togglePlay").attr("class", "playing");
-    	});
-    	this.bind("pause", function(e) {
-    		jQuery("#togglePlay").attr("class", "pausing");
-    	});
-    	jQuery(".galleria-info").after('<div id="togglePlay">&nbsp;</div>');
-    	jQuery("#togglePlay").attr("class", "playing");
-    	$description_activate
-    });
+		(function($) {    Galleria.loadTheme('$escaped_theme_url');
+	    Galleria.run('.galleria', {
+	       autoplay: $interval,
+	       showInfo: $show_info,
+	       height: 500,
+	       transition: "fade",
+	       transitionSpeed: 400,
+	       lightbox: true,
+	       extend: function() {
+	            var gallery = this;
+	            $('#togglePlay').click(function() {
+	                gallery.playToggle();
+	            });
+	       },
+	    });
+	    Galleria.ready(function() {
+	    	this.bind("play", function(e) {
+	    		$("#togglePlay").attr("class", "playing");
+	    	});
+	    	this.bind("pause", function(e) {
+	    		$("#togglePlay").attr("class", "pausing");
+	    	});
+	    	$(".galleria-info").after('<div id="togglePlay">&nbsp;</div>');
+	    	$("#togglePlay").attr("class", "playing");
+	    	$description_activate
+	    });
+		})(jQuery);
 </script>
 EOD;
 	return $galleria_js;
