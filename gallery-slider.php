@@ -99,9 +99,10 @@ function add_galleria_initializer($data) {
 	if (parseBool($data['show_desc'])) {
 		$description_activate = 'jQuery(".galleria-info-link").click();';
 	}
+	$escaped_theme_url = str_replace(" ", "%20", $theme_url);
 	$galleria_js = <<<EOD
 	<script>
-    Galleria.loadTheme('$theme_url');
+    Galleria.loadTheme('$escaped_theme_url');
     Galleria.run('.galleria', {
        autoplay: $interval,
        showInfo: $show_info,
