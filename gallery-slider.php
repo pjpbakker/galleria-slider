@@ -28,6 +28,7 @@ function get_tagged_images($attrs) {
 	
 	extract(shortcode_atts(
 		array(
+			'id' => 'galleria',
 			'tag' => 'emtpy_tag',
 			'interval' => 5000,
 			'sortby' => 'id',
@@ -45,7 +46,7 @@ function get_tagged_images($attrs) {
 	$query ="SELECT * FROM wp_posts as p, wp_term_relationships as tr, wp_terms as t where p.post_type = 'attachment' AND p.ID = tr.object_id AND tr.term_taxonomy_id = t.term_id AND t.name = '" . $tag . "'" . $orderby_clause;
 	$results = $wpdb->get_results($query);
 
-	$widget_content = '<div class="galleria">';
+	$widget_content = "<div id='$id'>";
 	if ($results) {
 	    foreach ($results as $attachment) {
 	    	setup_postdata($attachment);
@@ -61,6 +62,7 @@ function get_tagged_images($attrs) {
 	}
   $widget_content .= "</div>\n";
 	$galleria_data = array(
+		"id" => $id, 
 		"interval" => $interval, 
 		"show_info" => $show_info,
 		"show_desc" => $show_desc,
@@ -91,6 +93,7 @@ function load_galleria_scripts() {
 add_action( 'wp_enqueue_scripts', 'load_galleria_scripts' );
 
 function add_galleria_initializer($data) {
+	$id = $data['id'];
 	$theme = $data['theme'];
 	$theme_url = plugins_url( "/css/galleria/themes/$theme/galleria.$theme.min.js" , __FILE__ );
 	$interval = $data['interval'];
@@ -102,8 +105,9 @@ function add_galleria_initializer($data) {
 	$escaped_theme_url = str_replace(" ", "%20", $theme_url);
 	$galleria_js = <<<EOD
 	<script>
-		(function($) {    Galleria.loadTheme('$escaped_theme_url');
-	    Galleria.run('.galleria', {
+		(function($) {
+	    Galleria.loadTheme('$escaped_theme_url');
+	    Galleria.run('#$id', {
 	       autoplay: $interval,
 	       showInfo: $show_info,
 	       height: 500,
@@ -118,6 +122,7 @@ function add_galleria_initializer($data) {
 	       },
 	    });
 	    Galleria.ready(function() {
+	    	var galleria = this;
 	    	this.bind("play", function(e) {
 	    		$("#togglePlay").attr("class", "playing");
 	    	});
@@ -127,6 +132,9 @@ function add_galleria_initializer($data) {
 	    	$(".galleria-info").after('<div id="togglePlay">&nbsp;</div>');
 	    	$("#togglePlay").attr("class", "playing");
 	    	$description_activate
+	    	$('.galleria-fullscreen').click(function() {
+	    		galleria.toggleFullscreen();
+	    	});
 	    });
 		})(jQuery);
 </script>
