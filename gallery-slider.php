@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Galleria Slider
-Plugin URI: http://www.vierdeweg.nl/galleria-slider
+Plugin URI: https://github.com/pjpbakker/galleria-slider
 Description: Displays a gallery of images from Wordpress' Media library
 Version: 1.0.0
 Author: Paul Bakker
-Author URI: https://github.com/pjpbakker/galleria-slider
+Author URI: https://github.com/pjpbakker
 License: GPL2
 
 Copyright 2013  Paul Bakker
