@@ -5,7 +5,7 @@ Plugin URI: http://www.vierdeweg.nl/galleria-slider
 Description: Displays a gallery of images from Wordpress' Media library
 Version: 1.0.0
 Author: Paul Bakker
-Author URI: http://www.vierdeweg.nl
+Author URI: https://github.com/pjpbakker/galleria-slider
 License: GPL2
 
 Copyright 2013  Paul Bakker
@@ -32,6 +32,7 @@ function get_tagged_images($attrs) {
 			'tag' => 'emtpy_tag',
 			'interval' => 5000,
 			'sortby' => 'id',
+			'reverse' => "false",
 			'show_info' => 'true',
 			'show_desc' => 'true',
 			'theme' => 'classic',
@@ -43,7 +44,13 @@ function get_tagged_images($attrs) {
   if ($sortby == "name") {
 		$orderby_clause = " order by p.post_name";
   }
-	$query ="SELECT * FROM wp_posts as p, wp_term_relationships as tr, wp_terms as t where p.post_type = 'attachment' AND p.ID = tr.object_id AND tr.term_taxonomy_id = t.term_id AND t.name = '" . $tag . "'" . $orderby_clause;
+	if ($reverse == "true") {
+		$orderby_clause .= " desc";
+	}
+	$query = "SELECT * FROM wp_posts as p, wp_term_relationships as tr, wp_terms as t " .
+	"where p.post_type = 'attachment' AND p.ID = tr.object_id AND " .
+	"tr.term_taxonomy_id = t.term_id AND t.name = '" . $tag . "'" . $orderby_clause;
+	
 	$results = $wpdb->get_results($query);
 
 	$widget_content = "<div id='$id'>";
@@ -149,5 +156,4 @@ function parseBool($value) {
       return false;
    }
 }
-
 ?>
